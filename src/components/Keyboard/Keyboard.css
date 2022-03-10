@@ -3,39 +3,43 @@
   align-items: top;
   justify-content: space-around;
   width: 600px;
-  height: 150px;
+  height: 250px;
   background-color: #f4a460;
   padding: 10px;
   gap: 3px;
+  border-radius: 20px;
 }
 
 .key {
-  width: 35px;
-  height: 140px;
+  width: 40px;
+  height: 240px;
   background-color: #f8ead7;
-  border-radius: 3px;
+  border: solid #c55f00 1px;
+
+  border-radius: 5px;
 }
 
 .sharpKey {
-  width: 35px;
-  height: 75px;
+  width: 40px;
+  height: 140px;
   background-color: #708090;
-  border-radius: 3px;
+  border: solid #c55f00 1px;
+  border-radius: 5px;
 }
 
 .octaveUp,
 .octaveDown {
-  width: 50px;
-  height: 30px;
-  background-color: slategrey;
-  border: solid rgb(71, 71, 71) 5px;
+  width: 44px;
+  height: 25px;
+  background-color: #708090;
+  border: solid rgb(71, 71, 71) 1px;
   border-radius: 10px;
 }
 
 .octaves {
   display: flex;
   flex-direction: column;
-  height: 140px;
+  height: 250px;
   align-items: center;
   justify-content: space-around;
 }
@@ -45,5 +49,12 @@
 .octaveUp:hover,
 .octaveDown:hover {
   cursor: pointer;
-  border: rgb(59, 39, 0) solid 3px;
+  box-shadow: 0 2px 5px #5c3700;
+  -webkit-transform: scale(0.95, 0.95);
+  transform: scale(0.95, 0.95);
+}
+
+.key:active,
+.sharpKey:active {
+  background-color: #ffbd07;
 }

@@ -1,23 +1,11 @@
 import styles from './Keyboard.css';
 import * as Tone from 'tone';
+import { useKeyboard } from '../../context/keyboard';
 import { useState } from 'react';
 
 export default function Keyboard() {
-  const [octave, setOctave] = useState(4);
-  const [tones, setTones] = useState([
-    'C4',
-    'C#4',
-    'D4',
-    'D#4',
-    'E4',
-    'F4',
-    'F#4',
-    'G4',
-    'G#4',
-    'A4',
-    'A#4',
-    'B4',
-  ]);
+  const { tones, setTones, octave, setOctave } = useKeyboard();
+  const [unlock, setUnlock] = useState(false);
 
   const synth = new Tone.Synth().toDestination();
   function playTone(toneToPlay) {
@@ -64,6 +52,9 @@ export default function Keyboard() {
         <button className={styles.octaveUp} onClick={octaveUp}>
           ^^^
         </button>
+        <button className={styles.octaveUp} onClick={() => setUnlock(!unlock)}>
+          ???
+        </button>
         <button className={styles.octaveDown} onClick={octaveDown}>
           vvv
         </button>
@@ -75,7 +66,9 @@ export default function Keyboard() {
             key={tn}
             value={tn}
             onMouseDown={(e) => handleKeyboardMouseDown(e)}
+            onMouseOver={(e) => unlock && handleKeyboardMouseDown(e)}
             onMouseUp={(e) => handleKeyboardMouseUp(e)}
+            onMouseLeave={(e) => handleKeyboardMouseUp(e)}
           >
             {tn}
           </button>
