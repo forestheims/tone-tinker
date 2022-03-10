@@ -1,49 +1,130 @@
 import styles from './Keyboard.css';
 import * as Tone from 'tone';
 import { useKeyboard } from '../../context/keyboard';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Keyboard() {
-  const { tones, setTones, octave, setOctave } = useKeyboard();
+  const [octave, setOctave] = useState(4);
+  const [tones, setTones] = useState(
+    Array(12).fill(new Tone.Synth().toDestination())
+  );
   const [unlock, setUnlock] = useState(false);
+  const [fired, setFired] = useState(Array(12).fill(false));
+  const [currentKeys, setCurrentKeys] = useState([
+    'C4',
+    'C#4',
+    'D4',
+    'D#4',
+    'E4',
+    'F4',
+    'F#4',
+    'G4',
+    'G#4',
+    'A4',
+    'A#4',
+    'B4',
+  ]);
 
-  const synth = new Tone.Synth().toDestination();
-  function playTone(toneToPlay) {
-    synth.triggerAttack(toneToPlay);
+  useEffect(() => {}, [setOctave]);
+
+  // const synth ;
+  function playTone(i, toneToPlay) {
+    tones[i].triggerAttack(toneToPlay);
   }
 
+  const keys = [
+    'KeyA',
+    'KeyW',
+    'KeyS',
+    'KeyE',
+    'KeyD',
+    'KeyF',
+    'KeyT',
+    'KeyG',
+    'KeyY',
+    'KeyH',
+    'KeyU',
+    'KeyJ',
+  ];
+
   function handleKeyboardMouseDown(e) {
-    playTone(e.target.value);
+    if (e.code !== undefined) {
+      const newFired = [];
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i] === e.code && !fired[i]) {
+          newFired.push(true);
+          playTone(i, currentKeys[i]);
+        } else {
+          if (fired[i] === false) {
+            newFired.push(false);
+          } else {
+            newFired.push(true);
+          }
+        }
+      }
+      setFired(newFired);
+    } else {
+      let newI = 0;
+      const newer = currentKeys.map((key) => {
+        if (key !== e.target.value) {
+          newI = newI + 1;
+        } else {
+          return newI;
+        }
+      });
+      playTone(newI, e.target.value);
+    }
   }
 
   function handleKeyboardMouseUp(e) {
-    synth.triggerRelease();
+    if (e.code !== undefined) {
+      const newFired = [];
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i] === e.code && fired[i]) {
+          newFired.push(false);
+          tones[i].triggerRelease();
+        } else {
+          if (fired[i] === false) {
+            newFired.push(false);
+          } else {
+            newFired.push(true);
+          }
+        }
+      }
+      setFired(newFired);
+    } else {
+      let newI = 0;
+      const newer = currentKeys.map((key) => {
+        if (key !== e.target.value) {
+          newI = newI + 1;
+        } else {
+          return newI;
+        }
+      });
+      tones[newI].triggerRelease();
+    }
   }
 
   function octaveUp() {
+    const newKeys = currentKeys.map((tn) => {
+      let string = tn.split('');
+      string.pop();
+      string.push(octave + 1);
+      return string.join('');
+    });
     setOctave(octave + 1);
-    setTones(
-      tones.map((tn) => {
-        let string = tn.split('');
-        string.pop();
-        string.push(octave + 1);
-        console.log('string', string.join(''));
-        return string.join('');
-      })
-    );
+    setCurrentKeys(newKeys);
   }
 
   function octaveDown() {
+    const newKeys = currentKeys.map((tn) => {
+      let string = tn.split('');
+      string.pop();
+      string.push(octave - 1);
+      return string.join('');
+    });
     setOctave(octave - 1);
-    setTones(
-      tones.map((tn) => {
-        let string = tn.split('');
-        string.pop();
-        string.push(octave - 1);
-        console.log('string', string.join(''));
-        return string.join('');
-      })
-    );
+    setCurrentKeys(newKeys);
   }
 
   return (
@@ -59,18 +140,20 @@ export default function Keyboard() {
           vvv
         </button>
       </div>
-      {tones.map((tn) => {
+      {currentKeys.map((currentKey) => {
         return (
           <button
-            className={tn.length === 2 ? styles.key : styles.sharpKey}
-            key={tn}
-            value={tn}
+            className={currentKey.length === 2 ? styles.key : styles.sharpKey}
+            key={currentKey}
+            value={currentKey}
             onMouseDown={(e) => handleKeyboardMouseDown(e)}
             onMouseOver={(e) => unlock && handleKeyboardMouseDown(e)}
             onMouseUp={(e) => handleKeyboardMouseUp(e)}
             onMouseLeave={(e) => handleKeyboardMouseUp(e)}
+            onKeyDown={(e) => handleKeyboardMouseDown(e)}
+            onKeyUp={(e) => handleKeyboardMouseUp(e)}
           >
-            {tn}
+            {currentKey}
           </button>
         );
       })}

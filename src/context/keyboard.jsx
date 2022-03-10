@@ -1,25 +1,40 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import * as Tone from 'tone';
 
 const KeyboardContext = createContext();
 
 export function KeyboardProvider({ children }) {
-  const [octave, setOctave] = useState(4);
-  const [tones, setTones] = useState([
-    'C4',
-    'C#4',
-    'D4',
-    'D#4',
-    'E4',
-    'F4',
-    'F#4',
-    'G4',
-    'G#4',
-    'A4',
-    'A#4',
-    'B4',
-  ]);
+  // let tones = {
+  //   C4: new Tone.Synth().toDestination(),
+  //   'C#4': new Tone.Synth().toDestination(),
+  //   D4: new Tone.Synth().toDestination(),
+  //   'D#4': new Tone.Synth().toDestination(),
+  //   E4: new Tone.Synth().toDestination(),
+  //   F4: new Tone.Synth().toDestination(),
+  //   'F#4': new Tone.Synth().toDestination(),
+  //   G4: new Tone.Synth().toDestination(),
+  //   'G#4': new Tone.Synth().toDestination(),
+  //   A4: new Tone.Synth().toDestination(),
+  //   'A#4': new Tone.Synth().toDestination(),
+  //   B4: new Tone.Synth().toDestination(),
+  // };
 
-  const contextValue = { octave, setOctave, tones, setTones };
+  useEffect(() => {
+    // const oldKeys = Object.keys(tones);
+    // console.log(oldKeys);
+    // console.log(newKeys);
+    // const newObject = {};
+    // for (let i = 0; i < oldKeys.length; i++) {
+    //   const newKey = newKeys[i];
+    //   const oldKey = oldKeys[i];
+    //   newObject[newKey] = tones[oldKey];
+    //   console.log(newKey);
+    //   // delete tones[oldKey];
+    //   tones = newObject;
+    // }
+  }, []);
+
+  const contextValue = {};
 
   return (
     <KeyboardContext.Provider value={contextValue}>
