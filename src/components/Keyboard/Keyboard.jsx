@@ -1,13 +1,24 @@
 import styles from './Keyboard.css';
 import * as Tone from 'tone';
-import { useKeyboard } from '../../context/keyboard';
+// import { useKeyboard } from '../../context/keyboard';
 import { useEffect, useState } from 'react';
 
 export default function Keyboard() {
   const [octave, setOctave] = useState(4);
-  const [tones, setTones] = useState(
-    Array(12).fill(new Tone.Synth().toDestination())
-  );
+  const [tones, setTones] = useState({
+    KeyA: new Tone.Synth().toDestination(),
+    KeyW: new Tone.Synth().toDestination(),
+    KeyS: new Tone.Synth().toDestination(),
+    KeyE: new Tone.Synth().toDestination(),
+    KeyD: new Tone.Synth().toDestination(),
+    KeyF: new Tone.Synth().toDestination(),
+    KeyT: new Tone.Synth().toDestination(),
+    KeyG: new Tone.Synth().toDestination(),
+    KeyY: new Tone.Synth().toDestination(),
+    KeyH: new Tone.Synth().toDestination(),
+    KeyU: new Tone.Synth().toDestination(),
+    KeyJ: new Tone.Synth().toDestination(),
+  });
   const [unlock, setUnlock] = useState(false);
   const [fired, setFired] = useState(Array(12).fill(false));
   const [currentKeys, setCurrentKeys] = useState([
@@ -24,14 +35,6 @@ export default function Keyboard() {
     'A#4',
     'B4',
   ]);
-
-  useEffect(() => {}, [setOctave]);
-
-  // const synth ;
-  function playTone(i, toneToPlay) {
-    tones[i].triggerAttack(toneToPlay);
-  }
-
   const keys = [
     'KeyA',
     'KeyW',
@@ -47,67 +50,37 @@ export default function Keyboard() {
     'KeyJ',
   ];
 
+  function playTone(i, toneToPlay) {
+    tones[i].triggerAttack(toneToPlay);
+  }
+
   function handleKeyboardMouseDown(e) {
     if (e.code !== undefined) {
-      const newFired = [];
       for (let i = 0; i < keys.length; i++) {
-        if (keys[i] === e.code && !fired[i]) {
-          newFired.push(true);
-          playTone(i, currentKeys[i]);
-        } else {
-          if (fired[i] === false) {
-            newFired.push(false);
-          } else {
-            newFired.push(true);
-          }
+        if (keys[i] === e.code) {
+          playTone(e.code, currentKeys[i]);
         }
       }
-      setFired(newFired);
     } else {
-      let newI = 0;
-      const newer = currentKeys.map((key) => {
-        if (key !== e.target.value) {
-          newI = newI + 1;
-        } else {
-          return newI;
-        }
-      });
-      playTone(newI, e.target.value);
+      playTone(e.target.id, e.target.value);
     }
   }
 
   function handleKeyboardMouseUp(e) {
     if (e.code !== undefined) {
-      const newFired = [];
       for (let i = 0; i < keys.length; i++) {
-        if (keys[i] === e.code && fired[i]) {
-          newFired.push(false);
-          tones[i].triggerRelease();
-        } else {
-          if (fired[i] === false) {
-            newFired.push(false);
-          } else {
-            newFired.push(true);
-          }
+        if (keys[i] === e.code) {
+          tones[e.code].triggerRelease();
         }
       }
-      setFired(newFired);
     } else {
-      let newI = 0;
-      const newer = currentKeys.map((key) => {
-        if (key !== e.target.value) {
-          newI = newI + 1;
-        } else {
-          return newI;
-        }
-      });
-      tones[newI].triggerRelease();
+      tones[e.target.id].triggerRelease();
     }
   }
 
   function octaveUp() {
     const newKeys = currentKeys.map((tn) => {
-      let string = tn.split('');
+      const string = tn.split('');
       string.pop();
       string.push(octave + 1);
       return string.join('');
@@ -118,7 +91,7 @@ export default function Keyboard() {
 
   function octaveDown() {
     const newKeys = currentKeys.map((tn) => {
-      let string = tn.split('');
+      const string = tn.split('');
       string.pop();
       string.push(octave - 1);
       return string.join('');
@@ -140,12 +113,13 @@ export default function Keyboard() {
           vvv
         </button>
       </div>
-      {currentKeys.map((currentKey) => {
+      {currentKeys.map((currentKey, index) => {
         return (
           <button
             className={currentKey.length === 2 ? styles.key : styles.sharpKey}
             key={currentKey}
             value={currentKey}
+            id={keys[index]}
             onMouseDown={(e) => handleKeyboardMouseDown(e)}
             onMouseOver={(e) => unlock && handleKeyboardMouseDown(e)}
             onMouseUp={(e) => handleKeyboardMouseUp(e)}

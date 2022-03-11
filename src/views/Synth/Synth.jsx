@@ -9,8 +9,8 @@ export default function Synth() {
   return (
     <KeyboardProvider>
       <SequenceProvider>
-        {/* <Controls /> */}
-        {/* <Sequencer /> */}
+        <Controls />
+        <Sequencer />
         <Keyboard />
       </SequenceProvider>
     </KeyboardProvider>
