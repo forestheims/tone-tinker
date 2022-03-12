@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 export default function Keyboard() {
   const [octave, setOctave] = useState(4);
+
   const [tones, setTones] = useState({
     KeyA: new Tone.Synth().toDestination(),
     KeyW: new Tone.Synth().toDestination(),
@@ -19,8 +20,9 @@ export default function Keyboard() {
     KeyU: new Tone.Synth().toDestination(),
     KeyJ: new Tone.Synth().toDestination(),
   });
+
   const [unlock, setUnlock] = useState(false);
-  const [fired, setFired] = useState(Array(12).fill(false));
+
   const [currentKeys, setCurrentKeys] = useState([
     'C4',
     'C#4',
@@ -35,6 +37,7 @@ export default function Keyboard() {
     'A#4',
     'B4',
   ]);
+
   const keys = [
     'KeyA',
     'KeyW',
@@ -50,19 +53,33 @@ export default function Keyboard() {
     'KeyJ',
   ];
 
+  useEffect(() => {
+    const start = () => {
+      const cFour = document.getElementById('KeyA');
+      const event = new Event('click', cFour);
+      window.dispatchEvent(event);
+    };
+    start();
+  }, []);
+
   function playTone(i, toneToPlay) {
     tones[i].triggerAttack(toneToPlay);
   }
 
-  function handleKeyboardMouseDown(e) {
+  async function handleKeyboardMouseDown(e) {
+    console.log(e);
     if (e.code !== undefined) {
       for (let i = 0; i < keys.length; i++) {
-        if (keys[i] === e.code) {
+        if (keys[i] === e.code && !e.repeat) {
           playTone(e.code, currentKeys[i]);
+          console.log(e.target);
         }
       }
+      const playedNote = document.getElementById(e.code);
+      playedNote.classList.add(styles.active);
     } else {
       playTone(e.target.id, e.target.value);
+      e.target.classList.add(styles.active);
     }
   }
 
@@ -73,8 +90,11 @@ export default function Keyboard() {
           tones[e.code].triggerRelease();
         }
       }
+      const playedNote = document.getElementById(e.code);
+      playedNote.classList.remove(styles.active);
     } else {
       tones[e.target.id].triggerRelease();
+      e.target.classList.remove(styles.active);
     }
   }
 

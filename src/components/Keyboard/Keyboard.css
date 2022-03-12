@@ -15,7 +15,7 @@
   height: 240px;
   background-color: #f8ead7;
   border: solid #c55f00 1px;
-
+  outline: none;
   border-radius: 5px;
 }
 
@@ -25,6 +25,7 @@
   background-color: #708090;
   border: solid #c55f00 1px;
   border-radius: 5px;
+  outline: none;
 }
 
 .octaveUp,
@@ -42,6 +43,7 @@
   height: 250px;
   align-items: center;
   justify-content: space-around;
+  outline: none;
 }
 
 .key:hover,
@@ -54,7 +56,9 @@
   transform: scale(0.95, 0.95);
 }
 
-.key:active,
-.sharpKey:active {
+.active {
   background-color: #ffbd07;
+  box-shadow: 0 2px 5px #5c3700;
+  -webkit-transform: scale(0.95, 0.95);
+  transform: scale(0.95, 0.95);
 }
