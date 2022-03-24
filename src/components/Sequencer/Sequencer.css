@@ -1,6 +1,37 @@
 .sequencer {
-  width: 600px;
-  height: 150px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 555px;
+  height: 280px;
   padding: 10px;
-  background-color: aquamarine;
+  background-color: #7fffd4;
+  border-radius: 20px;
+}
+
+.pad {
+  height: 50px;
+  width: 50px;
+  background-color: #faebd7;
+  border: solid #008080 1px;
+  border-radius: 5px;
+}
+
+.pad:hover {
+  cursor: pointer;
+  box-shadow: 0 3px 9px #002e2e;
+
+  -webkit-transform: scale(1.15, 1.15);
+  transform: scale(1.15, 1.15);
+}
+
+.pad:focus {
+  background-color: #008080;
+}
+
+.pad:active {
+  background-color: hotpink;
 }
